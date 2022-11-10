@@ -1,0 +1,6 @@
+[submodule "hifi-gan"]
+	path = hifi-gan
+	url = https://github.com/jik876/hifi-gan
+[submodule "melgan-neurips"]
+	path = melgan-neurips
+	url = https://github.com/descriptinc/melgan-neurips
