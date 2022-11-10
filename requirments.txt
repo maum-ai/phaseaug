@@ -1,0 +1,10 @@
+tensorboard==2.0.0
+omegaconf==2.1.0
+Cython==0.29.21
+librosa==0.8.0
+matplotlib==3.3.1
+numpy==1.18.5
+scipy==1.5.2
+Unidecode==1.1.1
+kiwipiepy==0.8.1
+alias_free_torch==0.0.6

@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<div class="container" style="max-width:1800px;">
+    <head>
+        <meta charset="UTF-8">
+        <title>Audio Samples from "PhaseAug: A Differentiable Augmentation for Speech Synthesis to Simulate One-to-Many Mapping"</title>
+    </head>
+    <body style="font-family: Helvetica">
+        <h2>Audio Samples from "PhaseAug: A Differentiable Augmentation for Speech Synthesis to Simulate One-to-Many Mapping"</h2>
+		<div><p><b>Paper: </b> <a href="https://arxiv.org/abs/TBD">PhaseAug: A Differentiable Augmentation for Speech Synthesis to Simulate One-to-Many Mapping</a></p></div>
+        <div><p><b>Authors: </b>Junhyeok Lee, Seungu Han, Hyunjae Cho, Wonbin Jung @<a href="https://maum.ai">MINDsLab Inc.</a></p></div>
+        <div><p><b>Abstract:</b> Previous generative adversarial network (GAN)-based neural vocoders are trained to reconstruct the exact ground truth waveform from the paired mel-spectrogram and do not consider the one-to-many relationship of speech synthesis. This conventional training causes overfitting for both the discriminators and the generator, leading to the periodicity artifacts in the generated audio signal. In this work, we present PhaseAug, the first differentiable augmentation for speech synthesis that rotates the phase of each frequency bin to simulate one-to-many mapping. With our proposed method, we outperform baselines without any architecture modification. Code and audio samples will be available at <a href=https://github.com/mindslab-ai/phaseaug>https://github.com/mindslab-ai/phaseaug</a>.</a></p></div>
+
+		<h3>PhaseAug</h3>
+        <div>As we mentioned in Section 2.2, PhaseAug simulate one-to-many mapping without noticeable distortions. </div>
+        <div>Find a ground truth sample, other samples are phase-rotated version of the ground truth.</div>
+        <p></p>
+        <table>
+			<colgroup>
+                <col width="8%">
+                <col width="10%">
+                <col width="10%">
+                <col width="10%">
+                <col width="10%">
+            </colgroup>
+            <thead>
+                <tr>
+					<th>Samples</th>
+                    <td><div align="center">0</div></td>
+                    <td><div align="center">1</div></td>
+                    <td><div align="center">2</div></td>
+                    <td><div align="center">3</div></td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td nowrap><b>Q0, LJSpeech</b></td>
+                    <td><div align="center"><audio controls="" style="width: 250px;"><source src="samples/find_phaseaug/lj0_phaseaug1.wav" type="audio/wav"></audio></div></td>
+                    <td><div align="center"><audio controls="" style="width: 250px;"><source src="samples/find_phaseaug/lj0_gt.wav" type="audio/wav"></audio></div></td>
+                    <td><div align="center"><audio controls="" style="width: 250px;"><source src="samples/find_phaseaug/lj0_phaseaug2.wav" type="audio/wav"></audio></div></td>
+                    <td><div align="center"><audio controls="" style="width: 250px;"><source src="samples/find_phaseaug/lj0_phaseaug3.wav" type="audio/wav"></audio></div></td>
+                </tr>
+                <tr>
+                    <td nowrap><b>Q1, LJSpeech</b></td>
+                    <td><div align="center"><audio controls="" style="width: 250px;"><source src="samples/find_phaseaug/lj1_phaseaug1.wav" type="audio/wav"></audio></div></td>
+                    <td><div align="center"><audio controls="" style="width: 250px;"><source src="samples/find_phaseaug/lj1_phaseaug2.wav" type="audio/wav"></audio></div></td>
+                    <td><div align="center"><audio controls="" style="width: 250px;"><source src="samples/find_phaseaug/lj1_gt.wav" type="audio/wav"></audio></div></td>
+                    <td><div align="center"><audio controls="" style="width: 250px;"><source src="samples/find_phaseaug/lj1_phaseaug3.wav" type="audio/wav"></audio></div></td>
+                </tr>
+
+                <tr>
+                    <td nowrap><b>Q2, <a href="https://mindslab-ai.github.io/sane-tts/">SANE-TTS LJSpeech</a></b></td>
+                    <td><div align="center"><audio controls="" style="width: 250px;"><source src="samples/find_phaseaug/ljk_phaseaug1.wav" type="audio/wav"></audio></div></td>
+                    <td><div align="center"><audio controls="" style="width: 250px;"><source src="samples/find_phaseaug/ljk_phaseaug2.wav" type="audio/wav"></audio></div></td>
+                    <td><div align="center"><audio controls="" style="width: 250px;"><source src="samples/find_phaseaug/ljk_phaseaug3.wav" type="audio/wav"></audio></div></td>
+                    <td><div align="center"><audio controls="" style="width: 250px;"><source src="samples/find_phaseaug/ljk_gt.wav" type="audio/wav"></audio></div></td>
+                </tr>
+                <tr>
+                    <td nowrap><b>Q3, <a href="https://www.youtube.com/watch?v=D9syciL3Xsg">Alan Walker - Fade [NCS Release]</a></b></td>
+                    <td><div align="center"><audio controls="" style="width: 250px;"><source src="samples/find_phaseaug/faded_phaseaug1.wav" type="audio/wav"></audio></div></td>
+                    <td><div align="center"><audio controls="" style="width: 250px;"><source src="samples/find_phaseaug/faded_gt.wav" type="audio/wav"></audio></div></td>
+                    <td><div align="center"><audio controls="" style="width: 250px;"><source src="samples/find_phaseaug/faded_phaseaug2.wav" type="audio/wav"></audio></div></td>
+                    <td><div align="center"><audio controls="" style="width: 250px;"><source src="samples/find_phaseaug/faded_phaseaug3.wav" type="audio/wav"></audio></div></td>
+                </tr>
+
+            </tbody>
+        </table>
+        <details>
+            <summary><b>Answer</b></summary>
+            <div>Q0: 1</div>
+            <div>Q1: 2</div>
+            <div>Q2: 3</div>
+            <div>Q3: 1</div>
+        </details>
+
+        <br>
+
+		<h3>HiFi-GAN</h3>
+
+        <table>
+			<colgroup>
+                <col width="13%">
+                <col width="13%">
+                <col width="13%">
+                <col width="13%">
+                <col width="13%">
+                <col width="13%">
+                <col width="13%">
+            </colgroup>
+            <thead>
+                <tr>
+					<th>Model</th>
+                    <td><div align="center">GT</div></td>
+                    <td><div align="center">HiFi-GAN (100%)</div></td>
+                    <td><div align="center">HiFi-GAN (100%)<br>+ PhaseAug</div></td>
+                    <td><div align="center">HiFi-GAN (10%)</div></td>
+                    <td><div align="center">HiFi-GAN (10%)<br>+ PhaseAug</div></td>
+                    <td><div align="center">HiFi-GAN (1%)</div></td>
+                    <td><div align="center">HiFi-GAN (1%)<br>+ PhaseAug</div></td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td nowrap> LJ002-0167</td>
+                    <td><div align="center"><audio controls="" style="width: 250px;"><source src="samples/hifigan/LJ002-0167/gt.wav" type="audio/wav"></audio></div></td>
+                    <td><div align="center"><audio controls="" style="width: 250px;"><source src="samples/hifigan/LJ002-0167/hifigan_noaug100%.wav" type="audio/wav"></audio></div></td>
+                    <td><div align="center"><audio controls="" style="width: 250px;"><source src="samples/hifigan/LJ002-0167/hifigan_phaseaug100%.wav" type="audio/wav"></audio></div></td>
+                    <td><div align="center"><audio controls="" style="width: 250px;"><source src="samples/hifigan/LJ002-0167/hifigan_noaug10%.wav" type="audio/wav"></audio></div></td>
+                    <td><div align="center"><audio controls="" style="width: 250px;"><source src="samples/hifigan/LJ002-0167/hifigan_phaseaug10%.wav" type="audio/wav"></audio></div></td>
+                    <td><div align="center"><audio controls="" style="width: 250px;"><source src="samples/hifigan/LJ002-0167/hifigan_noaug1%.wav" type="audio/wav"></audio></div></td>
+                    <td><div align="center"><audio controls="" style="width: 250px;"><source src="samples/hifigan/LJ002-0167/hifigan_phaseaug1%.wav" type="audio/wav"></audio></div></td>
+                </tr>
+                <tr>
+                    <td nowrap> LJ005-0108</td>
+                    <td><div align="center"><audio controls="" style="width: 250px;"><source src="samples/hifigan/LJ005-0108/gt.wav" type="audio/wav"></audio></div></td>
+                    <td><div align="center"><audio controls="" style="width: 250px;"><source src="samples/hifigan/LJ005-0108/hifigan_noaug100%.wav" type="audio/wav"></audio></div></td>
+                    <td><div align="center"><audio controls="" style="width: 250px;"><source src="samples/hifigan/LJ005-0108/hifigan_phaseaug100%.wav" type="audio/wav"></audio></div></td>
+                    <td><div align="center"><audio controls="" style="width: 250px;"><source src="samples/hifigan/LJ005-0108/hifigan_noaug10%.wav" type="audio/wav"></audio></div></td>
+                    <td><div align="center"><audio controls="" style="width: 250px;"><source src="samples/hifigan/LJ005-0108/hifigan_phaseaug10%.wav" type="audio/wav"></audio></div></td>
+                    <td><div align="center"><audio controls="" style="width: 250px;"><source src="samples/hifigan/LJ005-0108/hifigan_noaug1%.wav" type="audio/wav"></audio></div></td>
+                    <td><div align="center"><audio controls="" style="width: 250px;"><source src="samples/hifigan/LJ005-0108/hifigan_phaseaug1%.wav" type="audio/wav"></audio></div></td>
+                </tr>
+                <tr>
+                    <td nowrap> LJ010-0262</td>
+                    <td><div align="center"><audio controls="" style="width: 250px;"><source src="samples/hifigan/LJ010-0262/gt.wav" type="audio/wav"></audio></div></td>
+                    <td><div align="center"><audio controls="" style="width: 250px;"><source src="samples/hifigan/LJ010-0262/hifigan_noaug100%.wav" type="audio/wav"></audio></div></td>
+                    <td><div align="center"><audio controls="" style="width: 250px;"><source src="samples/hifigan/LJ010-0262/hifigan_phaseaug100%.wav" type="audio/wav"></audio></div></td>
+                    <td><div align="center"><audio controls="" style="width: 250px;"><source src="samples/hifigan/LJ010-0262/hifigan_noaug10%.wav" type="audio/wav"></audio></div></td>
+                    <td><div align="center"><audio controls="" style="width: 250px;"><source src="samples/hifigan/LJ010-0262/hifigan_phaseaug10%.wav" type="audio/wav"></audio></div></td>
+                    <td><div align="center"><audio controls="" style="width: 250px;"><source src="samples/hifigan/LJ010-0262/hifigan_noaug1%.wav" type="audio/wav"></audio></div></td>
+                    <td><div align="center"><audio controls="" style="width: 250px;"><source src="samples/hifigan/LJ010-0262/hifigan_phaseaug1%.wav" type="audio/wav"></audio></div></td>
+                </tr>
+                <tr>
+                    <td nowrap> LJ022-0173</td>
+                    <td><div align="center"><audio controls="" style="width: 250px;"><source src="samples/hifigan/LJ022-0173/gt.wav" type="audio/wav"></audio></div></td>
+                    <td><div align="center"><audio controls="" style="width: 250px;"><source src="samples/hifigan/LJ022-0173/hifigan_noaug100%.wav" type="audio/wav"></audio></div></td>
+                    <td><div align="center"><audio controls="" style="width: 250px;"><source src="samples/hifigan/LJ022-0173/hifigan_phaseaug100%.wav" type="audio/wav"></audio></div></td>
+                    <td><div align="center"><audio controls="" style="width: 250px;"><source src="samples/hifigan/LJ022-0173/hifigan_noaug10%.wav" type="audio/wav"></audio></div></td>
+                    <td><div align="center"><audio controls="" style="width: 250px;"><source src="samples/hifigan/LJ022-0173/hifigan_phaseaug10%.wav" type="audio/wav"></audio></div></td>
+                    <td><div align="center"><audio controls="" style="width: 250px;"><source src="samples/hifigan/LJ022-0173/hifigan_noaug1%.wav" type="audio/wav"></audio></div></td>
+                    <td><div align="center"><audio controls="" style="width: 250px;"><source src="samples/hifigan/LJ022-0173/hifigan_phaseaug1%.wav" type="audio/wav"></audio></div></td>
+                </tr>
+                <tr>
+                    <td nowrap> LJ033-0072</td>
+                    <td><div align="center"><audio controls="" style="width: 250px;"><source src="samples/hifigan/LJ033-0072/gt.wav" type="audio/wav"></audio></div></td>
+                    <td><div align="center"><audio controls="" style="width: 250px;"><source src="samples/hifigan/LJ033-0072/hifigan_noaug100%.wav" type="audio/wav"></audio></div></td>
+                    <td><div align="center"><audio controls="" style="width: 250px;"><source src="samples/hifigan/LJ033-0072/hifigan_phaseaug100%.wav" type="audio/wav"></audio></div></td>
+                    <td><div align="center"><audio controls="" style="width: 250px;"><source src="samples/hifigan/LJ033-0072/hifigan_noaug10%.wav" type="audio/wav"></audio></div></td>
+                    <td><div align="center"><audio controls="" style="width: 250px;"><source src="samples/hifigan/LJ033-0072/hifigan_phaseaug10%.wav" type="audio/wav"></audio></div></td>
+                    <td><div align="center"><audio controls="" style="width: 250px;"><source src="samples/hifigan/LJ033-0072/hifigan_noaug1%.wav" type="audio/wav"></audio></div></td>
+                    <td><div align="center"><audio controls="" style="width: 250px;"><source src="samples/hifigan/LJ033-0072/hifigan_phaseaug1%.wav" type="audio/wav"></audio></div></td>
+                </tr>
+                <tr>
+                    <td nowrap> LJ041-0098</td>
+                    <td><div align="center"><audio controls="" style="width: 250px;"><source src="samples/hifigan/LJ041-0098/gt.wav" type="audio/wav"></audio></div></td>
+                    <td><div align="center"><audio controls="" style="width: 250px;"><source src="samples/hifigan/LJ041-0098/hifigan_noaug100%.wav" type="audio/wav"></audio></div></td>
+                    <td><div align="center"><audio controls="" style="width: 250px;"><source src="samples/hifigan/LJ041-0098/hifigan_phaseaug100%.wav" type="audio/wav"></audio></div></td>
+                    <td><div align="center"><audio controls="" style="width: 250px;"><source src="samples/hifigan/LJ041-0098/hifigan_noaug10%.wav" type="audio/wav"></audio></div></td>
+                    <td><div align="center"><audio controls="" style="width: 250px;"><source src="samples/hifigan/LJ041-0098/hifigan_phaseaug10%.wav" type="audio/wav"></audio></div></td>
+                    <td><div align="center"><audio controls="" style="width: 250px;"><source src="samples/hifigan/LJ041-0098/hifigan_noaug1%.wav" type="audio/wav"></audio></div></td>
+                    <td><div align="center"><audio controls="" style="width: 250px;"><source src="samples/hifigan/LJ041-0098/hifigan_phaseaug1%.wav" type="audio/wav"></audio></div></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <br>
+
+		<h3>MelGAN</h3>
+
+        <table>
+			<colgroup>
+                <col width="13%">
+                <col width="13%">
+                <col width="13%">
+                <col width="13%">
+                <col width="13%">
+                <col width="13%">
+                <col width="13%">
+            </colgroup>
+            <thead>
+                <tr>
+					<th>Model</th>
+                    <td><div align="center">GT</div></td>
+                    <td><div align="center">MelGAN (100%)</div></td>
+                    <td><div align="center">MelGAN (100%)<br>+ PhaseAug</div></td>
+                    <td><div align="center">MelGAN (10%)</div></td>
+                    <td><div align="center">MelGAN (10%)<br>+ PhaseAug</div></td>
+                    <td><div align="center">MelGAN (1%)</div></td>
+                    <td><div align="center">MelGAN (1%)<br>+ PhaseAug</div></td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td nowrap> LJ001-0068</td>
+                    <td><div align="center"><audio controls="" style="width: 250px;"><source src="samples/melgan/LJ001-0068/gt.wav" type="audio/wav"></audio></div></td>
+                    <td><div align="center"><audio controls="" style="width: 250px;"><source src="samples/melgan/LJ001-0068/melgan_noaug100%.wav" type="audio/wav"></audio></div></td>
+                    <td><div align="center"><audio controls="" style="width: 250px;"><source src="samples/melgan/LJ001-0068/melgan_phaseaug100%.wav" type="audio/wav"></audio></div></td>
+                    <td><div align="center"><audio controls="" style="width: 250px;"><source src="samples/melgan/LJ001-0068/melgan_noaug10%.wav" type="audio/wav"></audio></div></td>
+                    <td><div align="center"><audio controls="" style="width: 250px;"><source src="samples/melgan/LJ001-0068/melgan_phaseaug10%.wav" type="audio/wav"></audio></div></td>
+                    <td><div align="center"><audio controls="" style="width: 250px;"><source src="samples/melgan/LJ001-0068/melgan_noaug1%.wav" type="audio/wav"></audio></div></td>
+                    <td><div align="center"><audio controls="" style="width: 250px;"><source src="samples/melgan/LJ001-0068/melgan_phaseaug1%.wav" type="audio/wav"></audio></div></td>
+                </tr>
+                <tr>
+                    <td nowrap> LJ002-0167</td>
+                    <td><div align="center"><audio controls="" style="width: 250px;"><source src="samples/melgan/LJ002-0167/gt.wav" type="audio/wav"></audio></div></td>
+                    <td><div align="center"><audio controls="" style="width: 250px;"><source src="samples/melgan/LJ002-0167/melgan_noaug100%.wav" type="audio/wav"></audio></div></td>
+                    <td><div align="center"><audio controls="" style="width: 250px;"><source src="samples/melgan/LJ002-0167/melgan_phaseaug100%.wav" type="audio/wav"></audio></div></td>
+                    <td><div align="center"><audio controls="" style="width: 250px;"><source src="samples/melgan/LJ002-0167/melgan_noaug10%.wav" type="audio/wav"></audio></div></td>
+                    <td><div align="center"><audio controls="" style="width: 250px;"><source src="samples/melgan/LJ002-0167/melgan_phaseaug10%.wav" type="audio/wav"></audio></div></td>
+                    <td><div align="center"><audio controls="" style="width: 250px;"><source src="samples/melgan/LJ002-0167/melgan_noaug1%.wav" type="audio/wav"></audio></div></td>
+                    <td><div align="center"><audio controls="" style="width: 250px;"><source src="samples/melgan/LJ002-0167/melgan_phaseaug1%.wav" type="audio/wav"></audio></div></td>
+                </tr>
+                <tr>
+                    <td nowrap> LJ022-0046</td>
+                    <td><div align="center"><audio controls="" style="width: 250px;"><source src="samples/melgan/LJ022-0046/gt.wav" type="audio/wav"></audio></div></td>
+                    <td><div align="center"><audio controls="" style="width: 250px;"><source src="samples/melgan/LJ022-0046/melgan_noaug100%.wav" type="audio/wav"></audio></div></td>
+                    <td><div align="center"><audio controls="" style="width: 250px;"><source src="samples/melgan/LJ022-0046/melgan_phaseaug100%.wav" type="audio/wav"></audio></div></td>
+                    <td><div align="center"><audio controls="" style="width: 250px;"><source src="samples/melgan/LJ022-0046/melgan_noaug10%.wav" type="audio/wav"></audio></div></td>
+                    <td><div align="center"><audio controls="" style="width: 250px;"><source src="samples/melgan/LJ022-0046/melgan_phaseaug10%.wav" type="audio/wav"></audio></div></td>
+                    <td><div align="center"><audio controls="" style="width: 250px;"><source src="samples/melgan/LJ022-0046/melgan_noaug1%.wav" type="audio/wav"></audio></div></td>
+                    <td><div align="center"><audio controls="" style="width: 250px;"><source src="samples/melgan/LJ022-0046/melgan_phaseaug1%.wav" type="audio/wav"></audio></div></td>
+                </tr>
+                <tr>
+                    <td nowrap> LJ022-0173</td>
+                    <td><div align="center"><audio controls="" style="width: 250px;"><source src="samples/melgan/LJ022-0173/gt.wav" type="audio/wav"></audio></div></td>
+                    <td><div align="center"><audio controls="" style="width: 250px;"><source src="samples/melgan/LJ022-0173/melgan_noaug100%.wav" type="audio/wav"></audio></div></td>
+                    <td><div align="center"><audio controls="" style="width: 250px;"><source src="samples/melgan/LJ022-0173/melgan_phaseaug100%.wav" type="audio/wav"></audio></div></td>
+                    <td><div align="center"><audio controls="" style="width: 250px;"><source src="samples/melgan/LJ022-0173/melgan_noaug10%.wav" type="audio/wav"></audio></div></td>
+                    <td><div align="center"><audio controls="" style="width: 250px;"><source src="samples/melgan/LJ022-0173/melgan_phaseaug10%.wav" type="audio/wav"></audio></div></td>
+                    <td><div align="center"><audio controls="" style="width: 250px;"><source src="samples/melgan/LJ022-0173/melgan_noaug1%.wav" type="audio/wav"></audio></div></td>
+                    <td><div align="center"><audio controls="" style="width: 250px;"><source src="samples/melgan/LJ022-0173/melgan_phaseaug1%.wav" type="audio/wav"></audio></div></td>
+                </tr>
+                <tr>
+                    <td nowrap> LJ026-0064</td>
+                    <td><div align="center"><audio controls="" style="width: 250px;"><source src="samples/melgan/LJ026-0064/gt.wav" type="audio/wav"></audio></div></td>
+                    <td><div align="center"><audio controls="" style="width: 250px;"><source src="samples/melgan/LJ026-0064/melgan_noaug100%.wav" type="audio/wav"></audio></div></td>
+                    <td><div align="center"><audio controls="" style="width: 250px;"><source src="samples/melgan/LJ026-0064/melgan_phaseaug100%.wav" type="audio/wav"></audio></div></td>
+                    <td><div align="center"><audio controls="" style="width: 250px;"><source src="samples/melgan/LJ026-0064/melgan_noaug10%.wav" type="audio/wav"></audio></div></td>
+                    <td><div align="center"><audio controls="" style="width: 250px;"><source src="samples/melgan/LJ026-0064/melgan_phaseaug10%.wav" type="audio/wav"></audio></div></td>
+                    <td><div align="center"><audio controls="" style="width: 250px;"><source src="samples/melgan/LJ026-0064/melgan_noaug1%.wav" type="audio/wav"></audio></div></td>
+                    <td><div align="center"><audio controls="" style="width: 250px;"><source src="samples/melgan/LJ026-0064/melgan_phaseaug1%.wav" type="audio/wav"></audio></div></td>
+                </tr>
+                <tr>
+                    <td nowrap> LJ028-0281</td>
+                    <td><div align="center"><audio controls="" style="width: 250px;"><source src="samples/melgan/LJ028-0281/gt.wav" type="audio/wav"></audio></div></td>
+                    <td><div align="center"><audio controls="" style="width: 250px;"><source src="samples/melgan/LJ028-0281/melgan_noaug100%.wav" type="audio/wav"></audio></div></td>
+                    <td><div align="center"><audio controls="" style="width: 250px;"><source src="samples/melgan/LJ028-0281/melgan_phaseaug100%.wav" type="audio/wav"></audio></div></td>
+                    <td><div align="center"><audio controls="" style="width: 250px;"><source src="samples/melgan/LJ028-0281/melgan_noaug10%.wav" type="audio/wav"></audio></div></td>
+                    <td><div align="center"><audio controls="" style="width: 250px;"><source src="samples/melgan/LJ028-0281/melgan_phaseaug10%.wav" type="audio/wav"></audio></div></td>
+                    <td><div align="center"><audio controls="" style="width: 250px;"><source src="samples/melgan/LJ028-0281/melgan_noaug1%.wav" type="audio/wav"></audio></div></td>
+                    <td><div align="center"><audio controls="" style="width: 250px;"><source src="samples/melgan/LJ028-0281/melgan_phaseaug1%.wav" type="audio/wav"></audio></div></td>
+                </tr>
+            </tbody>
+        </table>
+    </body>
+</html>
