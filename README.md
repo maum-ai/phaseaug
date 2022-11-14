@@ -12,6 +12,12 @@ Submitted to ICASSP 2023
 
 ![phasor](asset/phaseaug_phasor.png) 
 
+
+## TODO
+- Errata in paper will be fixed. Section 2.5 in paper, transition band half-width 0.06-> 0.012
+- Section 2.5, mention about multiplyinng rotation matrix to "the left side of F(x)" will be added.
+- We will uplade PhaseAug to [pypi](https://pypi.org).
+
 ## Requirements
 - [Pytorch>=1.7.0](https://pytorch.org/) for [alias-free-torch](https://github.com/junjun3518/alias-free-torch)
 - The requirements are highlighted in [requirements.txt](./requirements.txt).
@@ -25,17 +31,38 @@ docker build -t=phaseaug --build-arg USER_ID=$(id -u) --build-arg GROUP_ID=$(id 
  
 ## Training
 0. Clone this repository and copy python files to hifi-gan folder
-```
+```bash
 git clone --recursive https://github.com/mindslab-ai/phaseaug
-cp ./phaseaug/*.py ./hifi-gan/
+cp ./phaseaug/*.py ./phaseaug/hifi-gan/
+cd ./phaseaug/hifi-gan
 ```
 
-```
-python train.py --config config_v1.json --aug --filter
+  - optional: MelGAN generator
+  ```bash
+  cp ./phaseaug/config_v1_melgan.json ./phaseaug/hifi-gan/
+  ```
+  - Change generator to MelGAN generator at train.py
+  ```python
+  # import MelGanGenerator as Generator at [train.py](./train.py)
+  #from models import Generator # remove original import Generator
+  from models import MelGANGenerator as Generator
+  ```
+
+1. Modify dataset path at `train.py`
+```python
+     parser.add_argument('--input_wavs_dir',
+                         default='path/LJSpeech-1.1/wavs_22k')
+     parser.add_argument('--input_mels_dir',
+                         default='path/LJSpeech-1.1/wavs_22k')
 ```
 
-Modyfing code to increase readability... 
-
+2. Run train.py
+```
+python train.py --config config_v1.json --aug --filter --data_ratio {0.01/0.1/1.} --name phaseaug_hifigan
+```
+```
+python train.py --config config_v1_melgan.json --aug --filter --data_ratio {0.01/0.1/1.} --name phaseaug_melgan
+```
 
 ## References
 This implementation uses code from following repositories:

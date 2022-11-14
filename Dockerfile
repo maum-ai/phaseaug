@@ -33,7 +33,7 @@ apt clean && \
 apt autoremove && \
 rm -rf /var/lib/apt/lists/* /tmp/* && \
 mkdir /hifigan
-COPY . /hifigan
+COPY ./hifi-gan /hifigan
 WORKDIR /hifigan
 
 ARG USER_ID
