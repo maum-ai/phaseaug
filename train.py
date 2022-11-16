@@ -16,15 +16,24 @@ from torch.distributed import init_process_group
 from torch.nn.parallel import DistributedDataParallel
 from env import AttrDict, build_env
 from meldataset import MelDataset, mel_spectrogram, get_dataset_filelist
-from models import Generator
-from models import MultiPeriodDiscriminator, MultiScaleDiscriminator, feature_loss, generator_loss,\
+from models import (
+    Generator, 
+    MultiPeriodDiscriminator, 
+    MultiScaleDiscriminator, 
+    feature_loss, 
+    generator_loss, 
     discriminator_loss
-from utils import plot_spectrogram, scan_checkpoint, load_checkpoint, save_checkpoint
+)
+from utils import (
+    plot_spectrogram, 
+    scan_checkpoint, 
+    load_checkpoint, 
+    save_checkpoint
+)
 from phaseaug import PhaseAug
-from math import pi, sqrt
+from math import pi
 
 torch.backends.cudnn.benchmark = True
-from alias_free_torch.filter import LowPassFilter1d as LPF
 
 
 def train(rank, a, h):
@@ -41,15 +50,19 @@ def train(rank, a, h):
     mpd = MultiPeriodDiscriminator().to(device)
     msd = MultiScaleDiscriminator().to(device)
     if a.aug:
-        aug = PhaseAug(a.aug_nfft, a.aug_hop).to(device)
+        aug = PhaseAug(
+            a.aug_nfft,
+            a.aug_hop,
+            a.filter,
+            a.var,
+            a.delta_max,
+            a.cutoff,
+            a.half_width,
+            a.kernel_size,
+            a.padding).to(device)
         phi_ref = torch.arange(
             a.aug_nfft // 2 + 1,
             device=device).unsqueeze(0) * 2 * pi / (a.aug_nfft) 
-        if a.filter:
-            lpf = LPF(0.5 / 10,
-                      0.6 / 50, #0.012, Paper will be modified in rebuttal phase.
-                      kernel_size=128,
-                      padding_mode='constant').to(device)
 
     periods = ['2', '3', '5', '7', '11', 'all']
     scales = ['1', '2', '4', 'all']
@@ -164,25 +177,6 @@ def train(rank, a, h):
     msd.train()
     if a.aug:
         aug.train()
-        if a.filter:
-            lpf.train()
-
-            def sample_mu(B):
-                mu = lpf(
-                      sqrt(a.var) *
-                      torch.randn([B, 1, a.aug_nfft // 2 + 1],
-                                  device=device) + 
-                      a.delta_max *
-                      (2. * torch.rand([B, 1, 1], device=device) - 1.)).squeeze(1)
-                return mu
-        else:
-
-            def sample_mu(B):
-                mu = (sqrt(a.var) *
-                      torch.randn([B, a.aug_nfft // 2 + 1], device=device) +
-                      a.delta_max *
-                      (2. * torch.rand([B, 1], device=device) - 1.))
-                return mu
 
     for epoch in range(max(0, last_epoch), a.training_epochs):
         if rank == 0:
@@ -212,7 +206,7 @@ def train(rank, a, h):
             optim_d.zero_grad()
 
             if a.aug:
-                mu = sample_mu(B)
+                mu = aug.sample_mu(B, device)
                 phi = mu * phi_ref
                 aug_y = aug(y, phi)
                 aug_y_g = aug(y_g_hat, phi).detach()
@@ -222,16 +216,20 @@ def train(rank, a, h):
                 y_df_hat_r, y_df_hat_g, _, _ = mpd(aug_y, aug_y_g)
             else:
                 y_df_hat_r, y_df_hat_g, _, _ = mpd(y, y_g_hat.detach())
-            loss_disc_f, losses_disc_f_r, losses_disc_f_g, accs_f_r, accs_f_g, dfr_stats, dfg_stats = \
-                                                           discriminator_loss(y_df_hat_r, y_df_hat_g)
+            loss_disc_f, losses_disc_f_r, losses_disc_f_g, \
+                accs_f_r, accs_f_g, dfr_stats, dfg_stats = discriminator_loss(
+                    y_df_hat_r, y_df_hat_g
+                )
 
             # MSD
             if a.aug:
                 y_ds_hat_r, y_ds_hat_g, _, _ = msd(aug_y, aug_y_g)
             else:
                 y_ds_hat_r, y_ds_hat_g, _, _ = msd(y, y_g_hat.detach())
-            loss_disc_s, losses_disc_s_r, losses_disc_s_g, accs_s_r, accs_s_g, dsr_stats, dsg_stats = \
-                                                          discriminator_loss(y_ds_hat_r, y_ds_hat_g)
+            loss_disc_s, losses_disc_s_r, losses_disc_s_g, \
+                accs_s_r, accs_s_g, dsr_stats, dsg_stats = discriminator_loss(
+                    y_ds_hat_r, y_ds_hat_g
+                )
             loss_disc_all = loss_disc_s + loss_disc_f
 
             loss_disc_all.backward()
@@ -243,7 +241,7 @@ def train(rank, a, h):
             # L1 Mel-Spectrogram Loss
             loss_mel = F.l1_loss(y_mel, y_g_hat_mel) * 45
             if a.aug:
-                mu = sample_mu(B)
+                mu = aug.sample_mu(B, device)
                 phi = mu * phi_ref
                 aug_y = aug(y, phi)
                 aug_y_g = aug(y_g_hat, phi)
@@ -380,14 +378,18 @@ def train(rank, a, h):
                             # MPD
                             y_df_hat_r, y_df_hat_g, fmap_f_r, fmap_f_g = mpd(
                                 y, y_g_hat.detach())
-                            loss_disc_f, losses_disc_f_r, losses_disc_f_g, accs_f_r, accs_f_g, dfr_stats, dfg_stats = \
-                                                          discriminator_loss(y_df_hat_r, y_df_hat_g)
+                            loss_disc_f, losses_disc_f_r, losses_disc_f_g, \
+                                accs_f_r, accs_f_g, dfr_stats, dfg_stats = discriminator_loss(
+                                    y_df_hat_r, y_df_hat_g
+                                )
 
                             # MSD
                             y_ds_hat_r, y_ds_hat_g, fmap_s_r, fmap_s_g = msd(
                                 y, y_g_hat.detach())
-                            loss_disc_s, losses_disc_s_r, losses_disc_s_g, accs_s_r, accs_s_g, dsr_stats, dsg_stats = \
-                                                          discriminator_loss(y_ds_hat_r, y_ds_hat_g)
+                            loss_disc_s, losses_disc_s_r, losses_disc_s_g, \
+                                accs_s_r, accs_s_g, dsr_stats, dsg_stats = discriminator_loss(
+                                    y_ds_hat_r, y_ds_hat_g
+                                )
                             loss_fm_f = feature_loss(fmap_f_r, fmap_f_g)
                             loss_fm_s = feature_loss(fmap_s_r, fmap_s_g)
                             val_fm_f_tot += loss_fm_f
@@ -504,6 +506,11 @@ def main():
     parser.add_argument('--filter', action='store_true')
     parser.add_argument('--var', default=6., type=float)
     parser.add_argument('--delta_max', default=2., type=float)
+    ### Low Pass Filter related args
+    parser.add_argument('--cutoff', default=0.05, type=float)
+    parser.add_argument('--half_width', default=0.012, type=float)  # Paper will be modified in rebuttal phase.
+    parser.add_argument('--kernel_size', default=128, type=int)
+    parser.add_argument('--padding', default='constant', type=str)
     ###
     parser.add_argument('--resume', action='store_true')
 
