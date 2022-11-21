@@ -25,7 +25,7 @@ pip install alias-free-torch==0.0.6 phaseaug
 ```
 - Insert PhaseAug in your code, check [train.py](./train.py) as a example.
 ```python
-from phaseaug import PhaseAug
+from phaseaug.phaseaug import PhaseAug
 ...
 # define phaseaug
 aug = PhaseAug()
