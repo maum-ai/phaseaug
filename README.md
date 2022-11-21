@@ -18,6 +18,31 @@ Submitted to ICASSP 2023
 - Section 2.5, mention about multiplyinng rotation matrix to "the left side of F(x)" will be added.
 - We will uplade PhaseAug to [pypi](https://pypi.org).
 
+## Use PhaseAug
+- Install `alias-free-torch==0.0.6` and `phaseaug`
+```bash
+pip install alias-free-torch==0.0.6 phaseaug 
+```
+- Insert PhaseAug in your code, check [train.py](./train.py) as a example.
+```python
+from phaseaug import PhaseAug
+...
+# define phaseaug
+aug = PhaseAug()
+...
+#discriminator update phase
+aug_y, aug_y_g = aug.forward_sync(y, y_g_hat.detach())
+y_df_hat_r, y_df_hat_g, _, _ = mpd(aug_y, aug_y_g)
+y_ds_hat_r, y_ds_hat_g, _, _ = msd(aug_y, aug_y_g)
+...
+#generator update phase
+aug_y, aug_y_g = aug.forward_sync(y, y_g_hat)
+y_df_hat_r, y_df_hat_g, fmap_f_r, fmap_f_g = mpd(
+                        aug_y, aug_y_g)
+y_ds_hat_r, y_ds_hat_g, fmap_s_r, fmap_s_g = msd(
+                        aug_y, aug_y_g)
+```
+
 ## Requirements
 - [Pytorch>=1.7.0](https://pytorch.org/) for [alias-free-torch](https://github.com/junjun3518/alias-free-torch)
 - The requirements are highlighted in [requirements.txt](./requirements.txt).
@@ -28,7 +53,7 @@ docker build -t=phaseaug --build-arg USER_ID=$(id -u) --build-arg GROUP_ID=$(id 
 - Cloned [official HiFi-GAN repo](https://github.com/jik876/hifi-gan).
 - Downloaded [LJ Speech Dataset](https://keithito.com/LJ-Speech-Dataset/).
 - (optional) [MelGAN](https://github.com/descriptinc/melgan-neurips) generator
- 
+
 ## Training
 0. Clone this repository and copy python files to hifi-gan folder
 ```bash
@@ -63,6 +88,7 @@ python train.py --config config_v1.json --aug --filter --data_ratio {0.01/0.1/1.
 ```
 python train.py --config config_v1_melgan.json --aug --filter --data_ratio {0.01/0.1/1.} --name phaseaug_melgan
 ```
+
 
 ## References
 This implementation uses code from following repositories:
