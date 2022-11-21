@@ -22,13 +22,13 @@ class PhaseAug(nn.Module):
         self.var = var
         self.delta_max = delta_max
         self.use_filter = use_filter
-        self.phi_ref = torch.arange(nfft // 2 + 1).unsqueeze(0) * 2 * pi / nfft
+        self.register_buffer('phi_ref', torch.arange(nfft // 2 + 1).unsqueeze(0) * 2 * pi / nfft)
         self.register_buffer('window', torch.hann_window(nfft))
 
         if use_filter:
             self.lpf = LPF(cutoff, half_width, kernel_size=kernel_size, padding_mode=filter_padding)
 
-    def sample_mu(self, batch_size, device):
+    def sample_phi(self, batch_size, device):
         if self.use_filter:
             mu = self.lpf(
                 sqrt(self.var) *
@@ -41,7 +41,8 @@ class PhaseAug(nn.Module):
                 torch.randn([batch_size, self.nfft // 2 + 1], device=device) +
                 self.delta_max * (2. * torch.rand([batch_size, 1], device=device) - 1.)
             )
-        return mu   #[B,nfft//2+1]
+        phi = mu * self.phi_ref
+        return phi  #[B,nfft//2+1]
 
     # x: audio [B,1,T] -> [B,1,T]
     # phi: [B,nfft//2+1]
@@ -56,16 +57,15 @@ class PhaseAug(nn.Module):
             return_complex=False
         )  #[B,F,T,2]
         if phi is None:
-            phi = self.sample_mu(X.shape[0], x.device) * self.phi_ref
-            #phi = 2 * pi * torch.rand([X.shape[0], X.shape[1]], device=x.device)
+            phi = self.sample_phi(X.shape[0], x.device)
 
         phi[:, 0] = 0. # we are multiplying phi_ref to mu, so it is always zero in our scheme
         phi = phi.unsqueeze(-1)  #[B,F,1]
         phi_cos = phi.cos()
         phi_sin = phi.sin()
         rot_mat = torch.cat(
-            [phi_cos, -phi_sin, phi_sin, phi_cos],  #[B,F,2,2]
-            dim=-1).view(-1, self.nfft // 2 + 1, 2, 2)
+            [phi_cos, -phi_sin, phi_sin, phi_cos],
+            dim=-1).view(-1, self.nfft // 2 + 1, 2, 2)  #[B,F,2,2]
         # We did not mention that we multiplied rot_mat to "the left side of X"
         # Paper will be modified at rebuttal phase for clarity.
         X_aug = torch.einsum('bfij ,bftj->bfti', rot_mat, X)
@@ -81,25 +81,25 @@ class PhaseAug(nn.Module):
     # x: audio [B,1,T] -> [B,1,T]
     # phi: [B,nfft//2+1]
     def forward_sync(self, x, x_hat, phi=None):
-        x = torch.cat([x,x_hat], dim=0).squeeze(1) #[2B,t]
+        x = torch.cat([x, x_hat], dim=0).squeeze(1) #[2B,t]
         X = torch.stft(
             x,
             self.nfft,
             self.hop,
             window=self.window,
             return_complex=False
-        )  #[B,F,T,2]
+        )  #[2B,F,T,2]
         if phi is None:
-            phi = 2 * pi * torch.rand([X.shape[0]//2, X.shape[1]], device=x.device)
-        phi = torch.cat([phi,phi], dim=0)
+            phi = self.sample_phi(X.shape[0] // 2, x.device)
+        phi = torch.cat([phi, phi], dim=0)
 
         phi[:, 0] = 0. # we are multiplying phi_ref to mu, so it is always zero in our scheme
-        phi = phi.unsqueeze(-1)  #[B,F,1]
+        phi = phi.unsqueeze(-1)  #[2B,F,1]
         phi_cos = phi.cos()
         phi_sin = phi.sin()
         rot_mat = torch.cat(
-            [phi_cos, -phi_sin, phi_sin, phi_cos],  #[B,F,2,2]
-            dim=-1).view(-1, self.nfft // 2 + 1, 2, 2)
+            [phi_cos, -phi_sin, phi_sin, phi_cos],
+            dim=-1).view(-1, self.nfft // 2 + 1, 2, 2)  #[2B,F,2,2]
         # We did not mention that we multiplied rot_mat to "the left side of X"
         # Paper will be modified at rebuttal phase for clarity.
         X_aug = torch.einsum('bfij ,bftj->bfti', rot_mat, X)
@@ -110,4 +110,4 @@ class PhaseAug(nn.Module):
             window=self.window,
             return_complex=False
         )
-        return x_aug.unsqueeze(1).split(2, dim=0)  #[B,1,t],[B,1,t]
+        return x_aug.unsqueeze(1).split(x_aug.shape[0] // 2, dim=0)  #[B,1,t],[B,1,t]

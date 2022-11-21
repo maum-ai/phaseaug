@@ -31,7 +31,6 @@ from utils import (
     save_checkpoint
 )
 from phaseaug import PhaseAug
-from math import pi
 
 torch.backends.cudnn.benchmark = True
 
@@ -60,9 +59,6 @@ def train(rank, a, h):
             a.half_width,
             a.kernel_size,
             a.padding).to(device)
-        phi_ref = torch.arange(
-            a.aug_nfft // 2 + 1,
-            device=device).unsqueeze(0) * 2 * pi / (a.aug_nfft) 
 
     periods = ['2', '3', '5', '7', '11', 'all']
     scales = ['1', '2', '4', 'all']
@@ -206,10 +202,7 @@ def train(rank, a, h):
             optim_d.zero_grad()
 
             if a.aug:
-                mu = aug.sample_mu(B, device)
-                phi = mu * phi_ref
-                aug_y = aug(y, phi)
-                aug_y_g = aug(y_g_hat, phi).detach()
+                aug_y, aug_y_g = aug.forward_sync(y, y_g_hat.detach())
 
             # MPD
             if a.aug and (not a.aug_msd_only):
@@ -241,10 +234,7 @@ def train(rank, a, h):
             # L1 Mel-Spectrogram Loss
             loss_mel = F.l1_loss(y_mel, y_g_hat_mel) * 45
             if a.aug:
-                mu = aug.sample_mu(B, device)
-                phi = mu * phi_ref
-                aug_y = aug(y, phi)
-                aug_y_g = aug(y_g_hat, phi)
+                aug_y, aug_y_g = aug.forward_sync(y, y_g_hat)
                 if not a.aug_msd_only:
                     y_df_hat_r, y_df_hat_g, fmap_f_r, fmap_f_g = mpd(
                         aug_y, aug_y_g)
