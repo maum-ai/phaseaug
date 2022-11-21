@@ -22,27 +22,29 @@ class PhaseAug(nn.Module):
         self.var = var
         self.delta_max = delta_max
         self.use_filter = use_filter
-        self.register_buffer('phi_ref', torch.arange(nfft // 2 + 1).unsqueeze(0) * 2 * pi / nfft)
         self.register_buffer('window', torch.hann_window(nfft))
+        self.register_buffer('phi_ref', torch.arange(nfft // 2 + 1).unsqueeze(0) * 2 * pi / nfft)
 
         if use_filter:
             self.lpf = LPF(cutoff, half_width, kernel_size=kernel_size, padding_mode=filter_padding)
-
-    def sample_phi(self, batch_size, device):
-        if self.use_filter:
-            mu = self.lpf(
-                sqrt(self.var) *
-                torch.randn([batch_size, 1, self.nfft // 2 + 1], device=device) +
-                self.delta_max * (2. * torch.rand([batch_size, 1, 1], device=device) - 1.)
-            ).squeeze(1)
+            def sample_phi(self, batch_size):
+                mu = self.lpf(
+                    sqrt(self.var) *
+                    torch.randn([batch_size, 1, self.nfft // 2 + 1], device=self.phi_ref.device) +
+                    self.delta_max * (2. * torch.rand([batch_size, 1, 1], device=self.phi_ref.device) - 1.)
+                ).squeeze(1)
+                phi = mu * self.phi_ref
+                return phi   #[B,nfft//2+1]
         else:
-            mu = (
-                sqrt(self.var) *
-                torch.randn([batch_size, self.nfft // 2 + 1], device=device) +
-                self.delta_max * (2. * torch.rand([batch_size, 1], device=device) - 1.)
-            )
-        phi = mu * self.phi_ref
-        return phi  #[B,nfft//2+1]
+            def sample_phi(self, batch_size):
+                mu = (
+                    sqrt(self.var) *
+                    torch.randn([batch_size, self.nfft // 2 + 1], device=self.phi_ref.device) +
+                    self.delta_max * (2. * torch.rand([batch_size, 1], device=self.phi_ref.device) - 1.)
+                )
+                phi = mu * self.phi_ref
+                return phi   #[B,nfft//2+1]
+        self.sample_phi = sample_phi
 
     # x: audio [B,1,T] -> [B,1,T]
     # phi: [B,nfft//2+1]
@@ -57,15 +59,15 @@ class PhaseAug(nn.Module):
             return_complex=False
         )  #[B,F,T,2]
         if phi is None:
-            phi = self.sample_phi(X.shape[0], x.device)
+            phi = self.sample_phi(self, X.shape[0])
 
         phi[:, 0] = 0. # we are multiplying phi_ref to mu, so it is always zero in our scheme
         phi = phi.unsqueeze(-1)  #[B,F,1]
         phi_cos = phi.cos()
         phi_sin = phi.sin()
         rot_mat = torch.cat(
-            [phi_cos, -phi_sin, phi_sin, phi_cos],
-            dim=-1).view(-1, self.nfft // 2 + 1, 2, 2)  #[B,F,2,2]
+            [phi_cos, -phi_sin, phi_sin, phi_cos],  #[B,F,2,2]
+            dim=-1).view(-1, self.nfft // 2 + 1, 2, 2)
         # We did not mention that we multiplied rot_mat to "the left side of X"
         # Paper will be modified at rebuttal phase for clarity.
         X_aug = torch.einsum('bfij ,bftj->bfti', rot_mat, X)
@@ -90,7 +92,7 @@ class PhaseAug(nn.Module):
             return_complex=False
         )  #[2B,F,T,2]
         if phi is None:
-            phi = self.sample_phi(X.shape[0] // 2, x.device)
+            phi = self.sample_phi(self, X.shape[0] // 2)
         phi = torch.cat([phi, phi], dim=0)
 
         phi[:, 0] = 0. # we are multiplying phi_ref to mu, so it is always zero in our scheme
@@ -98,8 +100,8 @@ class PhaseAug(nn.Module):
         phi_cos = phi.cos()
         phi_sin = phi.sin()
         rot_mat = torch.cat(
-            [phi_cos, -phi_sin, phi_sin, phi_cos],
-            dim=-1).view(-1, self.nfft // 2 + 1, 2, 2)  #[2B,F,2,2]
+            [phi_cos, -phi_sin, phi_sin, phi_cos],  #[2B,F,2,2]
+            dim=-1).view(-1, self.nfft // 2 + 1, 2, 2)
         # We did not mention that we multiplied rot_mat to "the left side of X"
         # Paper will be modified at rebuttal phase for clarity.
         X_aug = torch.einsum('bfij ,bftj->bfti', rot_mat, X)
