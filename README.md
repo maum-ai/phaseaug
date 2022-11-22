@@ -14,9 +14,12 @@ Submitted to ICASSP 2023
 
 
 ## TODO
-- Errata in paper will be fixed. Section 2.5 in paper, transition band half-width 0.06-> 0.012
-- Section 2.5, mention about multiplyinng rotation matrix to "the left side of F(x)" will be added.
-- We will uplade PhaseAug to [pypi](https://pypi.org).
+- [ ] Errata in paper will be fixed. Section 2.5 in paper, transition band half-width 0.06-> 0.012.
+- [ ] Section 2.5, mention about multiplyinng rotation matrix to "the left side of F(x)" will be added. -> not sure, margin issues
+- [x] Upload PhaseAug to [pypi](https://pypi.org/project/phaseaug/).
+- [x] Upload [VITS](https://arxiv.org/abs/2106.06103)+PhaseAug sampels at demo page.
+- [x] Refactoring codes for packaging.
+
 
 ## Use PhaseAug
 - Install `alias-free-torch==0.0.6` and `phaseaug`
@@ -30,12 +33,12 @@ from phaseaug.phaseaug import PhaseAug
 # define phaseaug
 aug = PhaseAug()
 ...
-#discriminator update phase
+# discriminator update phase
 aug_y, aug_y_g = aug.forward_sync(y, y_g_hat.detach())
 y_df_hat_r, y_df_hat_g, _, _ = mpd(aug_y, aug_y_g)
 y_ds_hat_r, y_ds_hat_g, _, _ = msd(aug_y, aug_y_g)
 ...
-#generator update phase
+# generator update phase
 aug_y, aug_y_g = aug.forward_sync(y, y_g_hat)
 y_df_hat_r, y_df_hat_g, fmap_f_r, fmap_f_g = mpd(
                         aug_y, aug_y_g)
