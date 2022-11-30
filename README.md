@@ -52,7 +52,7 @@ with autocast(enabled=True)
     # wrapping PhaseAug with autocase(enabled=False)
     with autocast(enabled=False)
         aug_y, aug_y_g = aug.forward_sync(y, y_g_hat)
-    # usually net_d parts are outside of autocast
+    # usually net_d parts are inside of autocast(enabled=True)
     y_df_hat_r, y_df_hat_g, fmap_f_r, fmap_f_g = net_d(aug_y, aug_y_g)
 
 ```
