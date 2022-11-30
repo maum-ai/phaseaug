@@ -40,10 +40,21 @@ y_ds_hat_r, y_ds_hat_g, _, _ = msd(aug_y, aug_y_g)
 ...
 # generator update phase
 aug_y, aug_y_g = aug.forward_sync(y, y_g_hat)
-y_df_hat_r, y_df_hat_g, fmap_f_r, fmap_f_g = mpd(
-                        aug_y, aug_y_g)
-y_ds_hat_r, y_ds_hat_g, fmap_s_r, fmap_s_g = msd(
-                        aug_y, aug_y_g)
+y_df_hat_r, y_df_hat_g, fmap_f_r, fmap_f_g = mpd(aug_y, aug_y_g)
+y_ds_hat_r, y_ds_hat_g, fmap_s_r, fmap_s_g = msd(aug_y, aug_y_g)
+```
+
+- If you are applying `torch.cuda.amp.autocast` like [VITS](https://github.com/jaywalnut310/vits), you need to wrap PhaseAug with `autocase(enabled=False)` to prevent [ComplexHalf issue](https://github.com/jaywalnut310/vits/issues/15).
+```python
+from torch.cuda.amp import autocast
+...
+with autocast(enabled=True)
+    # wrapping PhaseAug with autocase(enabled=False)
+    with autocast(enabled=False)
+        aug_y, aug_y_g = aug.forward_sync(y, y_g_hat)
+    # usually net_d parts are outside of autocast
+    y_df_hat_r, y_df_hat_g, fmap_f_r, fmap_f_g = net_d(aug_y, aug_y_g)
+
 ```
 
 ## Requirements
