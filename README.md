@@ -8,14 +8,15 @@ Junhyeok Lee, Seungu Han, Hyunjae Cho, Wonbin Jung @ [MINDsLab Inc.](https://git
 
 **Abstract** : Previous generative adversarial network (GAN)-based neural vocoders are trained to reconstruct the exact ground truth waveform from the paired mel-spectrogram and do not consider the one-to-many relationship of speech synthesis. This conventional training causes overfitting for both the discriminators and the generator, leading to the periodicity artifacts in the generated audio signal. In this work, we present PhaseAug, the first differentiable augmentation for speech synthesis that rotates the phase of each frequency bin to simulate one-to-many mapping. With our proposed method, we outperform baselines without any architecture modification. Code and audio samples will be available at https://github.com/mindslab-ai/phaseaug.
 
-Submitted to ICASSP 2023
+Accepted to ICASSP 2023
 
 ![phasor](asset/phaseaug_phasor.png) 
 
 
 ## TODO
-- [ ] Errata in paper will be fixed. Section 2.5 in paper, transition band half-width 0.06-> 0.012.
-- [ ] Section 2.5, mention about multiplyinng rotation matrix to "the left side of F(x)" will be added. -> not sure, margin issues
+- [x] Arxiv updated
+- [x] Errata in paper will be fixed. Section 2.5 in paper, transition band half-width 0.06-> 0.012.
+- [x] Section 2.5, mention about multiplyinng rotation matrix to "the left side of F(x)" will be added. -> transpose m,k to reduce ambiguity
 - [x] Upload PhaseAug to [pypi](https://pypi.org/project/phaseaug/).
 - [x] Upload [VITS](https://arxiv.org/abs/2106.06103)+PhaseAug sampels at demo page.
 - [x] Refactoring codes for packaging.
