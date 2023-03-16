@@ -14,6 +14,7 @@ Accepted to ICASSP 2023
 
 
 ## TODO
+- [ ] PyTorch 2.0 is released, need to modify STFT and iSTFT for complex support
 - [x] Arxiv updated
 - [x] Errata in paper will be fixed. Section 2.5 in paper, transition band half-width 0.06-> 0.012.
 - [x] Section 2.5, mention about multiplyinng rotation matrix to "the left side of F(x)" will be added. -> transpose m,k to reduce ambiguity
