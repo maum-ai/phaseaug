@@ -14,7 +14,7 @@ Accepted to ICASSP 2023
 
 
 ## TODO
-- [ ] PyTorch 2.0 is released, need to modify STFT and iSTFT for complex support
+- [x] PyTorch 2.0 is released, need to modify STFT and iSTFT for complex support (solved at `1.0.0`)
 - [x] Arxiv updated
 - [x] Errata in paper will be fixed. Section 2.5 in paper, transition band half-width 0.06-> 0.012.
 - [x] Section 2.5, mention about multiplyinng rotation matrix to "the left side of F(x)" will be added. -> transpose m,k to reduce ambiguity
@@ -60,7 +60,8 @@ with autocast(enabled=True)
 ```
 
 ## Requirements
-- [Pytorch>=1.7.0](https://pytorch.org/) for [alias-free-torch](https://github.com/junjun3518/alias-free-torch)
+- [PyTorch>=1.7.0](https://pytorch.org/) for [alias-free-torch](https://github.com/junjun3518/alias-free-torch)
+- Support PyTorch>=2.0.0
 - The requirements are highlighted in [requirements.txt](./requirements.txt).
 - We also provide docker setup [Dockerfile](./Dockerfile).
 ```
@@ -128,5 +129,8 @@ If this repostory useful for yout research, please consider citing!
   year=2022,
 }
 ```
-If you have a question or any kind of inquiries, please contact Junhyeok Lee at [jun3518@mindslab.ai](mailto:jun3518@mindslab.ai)
+
+Bibtex will be updated after ICASSP 2023.
+
+If you have a question or any kind of inquiries, please contact Junhyeok Lee at [jun3518@icloud.com](mailto:jun3518@icloud.com)
 
