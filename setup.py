@@ -6,7 +6,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
     name                = 'phaseaug',
-    version             = '1.0.0',
+    version             = '1.0.1',
     description         = 'PhaseAug: A Differentiable Augmentation for Speech Synthesis to Simulate One-to-Many Mapping',
     long_description=long_description,
     long_description_content_type="text/markdown",

@@ -100,9 +100,10 @@ class PhaseAug(nn.Module):
     # phi: [B,nfft//2+1]
     # also possible for x :[B,C,T] but we did not generalize it.
     def forward(self, x, phi=None):
+        B = x.shape[0]
         x = x.squeeze(1)  #[B,t]
         if phi is None:
-            phi = self.sample_phi(self, X.shape[0])
+            phi = self.sample_phi(self, B)
         phi[:, 0] = 0. # we are multiplying phi_ref to mu, so it is always zero in our scheme
         phi = phi.unsqueeze(-1)  #[B,F,1]
         x_aug = self.stft_rot_istft(self, x, phi)
@@ -114,7 +115,7 @@ class PhaseAug(nn.Module):
         B = x.shape[0]
         x = torch.cat([x, x_hat], dim=0) #[2B,1,t]
         if phi is None:
-            phi = self.sample_phi(self, X.shape[0] // 2) #[2B, nfft//2+1]
+            phi = self.sample_phi(self, B) #[2B, nfft//2+1]
         phi = torch.cat([phi, phi], dim=0)
         x_augs = self.forward(x, phi).split(B, dim=0)
         return x_augs
