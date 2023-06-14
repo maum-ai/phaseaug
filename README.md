@@ -59,6 +59,8 @@ with autocast(enabled=True)
 
 ```
 
+Authors recommend to read codes from [PITS](https://github.com/anonymous-pits/pits) for complicated application.  
+
 ## Requirements
 - [PyTorch>=1.7.0](https://pytorch.org/) for [alias-free-torch](https://github.com/junjun3518/alias-free-torch)
 - Support PyTorch>=2.0.0
@@ -122,15 +124,19 @@ This README and the webpage for the audio samples are inspired by:
 
 If this repostory useful for yout research, please consider citing!
 ```bib
-@inproceedings{phaseaug,
+@INPROCEEDINGS{phaseaug,
   author={Lee, Junhyeok and Han, Seungu and Cho, Hyunjae and Jung, Wonbin},
-  title={{PhaseAug: A Differentiable Augmentation for Speech Synthesis to Simulate One-to-Many Mapping}},
-  journal = {arXiv preprint arXiv:2211.04610},
-  year=2022,
+  booktitle={ICASSP 2023 - 2023 IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP)},
+  title={PhaseAug: A Differentiable Augmentation for Speech Synthesis to Simulate One-to-Many Mapping},
+  year={2023},
+  volume={},
+  number={},
+  pages={1-5},
+  doi={10.1109/ICASSP49357.2023.10096374}
 }
 ```
 
-Bibtex will be updated after ICASSP 2023.
+Bibtex is updated to [ICASSP 2023 version](https://ieeexplore.ieee.org/document/10096374). Please note that page numbers are temporary numbers.
 
 If you have a question or any kind of inquiries, please contact Junhyeok Lee at [jun3518@icloud.com](mailto:jun3518@icloud.com)
 
